@@ -14,7 +14,7 @@
 pimcore.registerNS("pimcore.layout.toolbar");
 pimcore.layout.toolbar = Class.create({
 
-    initialize: function() {
+    initialize: function () {
 
         var user = pimcore.globalmanager.get("user");
         this.toolbar = Ext.getCmp("pimcore_panel_toolbar");
@@ -329,7 +329,7 @@ pimcore.layout.toolbar = Class.create({
                 });
             }
 
-            if (user.isAllowed("application_logging")&& perspectiveCfg.inToolbar("extras.applicationlog")) {
+            if (user.isAllowed("application_logging") && perspectiveCfg.inToolbar("extras.applicationlog")) {
                 extrasItems.push({
                     text: t("log_applicationlog"),
                     iconCls: "pimcore_icon_log_admin",
@@ -593,7 +593,7 @@ pimcore.layout.toolbar = Class.create({
                 marketingItems.push({
                     text: "Piwik",
                     iconCls: "pimcore_icon_piwik",
-                    handler: (function() {
+                    handler: (function () {
                         // create a promise which is resolved if the request succeeds
                         var promise = new Ext.Promise(function (resolve, reject) {
                             Ext.Ajax.request({
@@ -616,14 +616,15 @@ pimcore.layout.toolbar = Class.create({
                                     reject('Piwik iframe integration is not configured.');
                                 },
 
-                                failure: function(response) {
+                                failure: function (response) {
                                     try {
                                         var data = Ext.decode(response.responseText);
                                         if (data && data.message) {
                                             reject(data.message);
                                             return;
                                         }
-                                    } catch (e) {}
+                                    } catch (e) {
+                                    }
 
                                     reject(response.responseText);
                                 }
@@ -740,7 +741,7 @@ pimcore.layout.toolbar = Class.create({
                     userItems.push(
                         {
                             text: t("analyze_permissions"),
-                            handler: function() {
+                            handler: function () {
                                 var checker = new pimcore.element.permissionchecker();
                                 checker.show();
                             }.bind(this),
@@ -990,13 +991,14 @@ pimcore.layout.toolbar = Class.create({
             var searchItems = [];
             var searchAction = function (type) {
                 pimcore.helpers.itemselector(false, function (selection) {
-                    pimcore.helpers.openElement(selection.id, selection.type, selection.subtype);
-                }, {type: [type]},
-                    {moveToTab: true,
+                        pimcore.helpers.openElement(selection.id, selection.type, selection.subtype);
+                    }, {type: [type]},
+                    {
+                        moveToTab: true,
                         context: {
                             scope: "globalSearch"
                         }
-                });
+                    });
             };
 
             if (user.isAllowed("documents") && perspectiveCfg.inToolbar("search.documents")) {
@@ -1079,7 +1081,7 @@ pimcore.layout.toolbar = Class.create({
     },
 
     showSubMenu: function (e, el) {
-        if(this.hidden) {
+        if (this.hidden) {
             e.stopEvent();
             el = Ext.get(el);
             var offsets = el.getOffsetsTo(Ext.getBody());
@@ -1220,16 +1222,16 @@ pimcore.layout.toolbar = Class.create({
         }
     },
 
-    openPerspective: function(name) {
+    openPerspective: function (name) {
         location.href = "/admin/?perspective=" + name;
     },
 
-    generatePagePreviews: function ()  {
+    generatePagePreviews: function () {
         Ext.Ajax.request({
             url: '/admin/page/get-list',
             success: function (res) {
                 var data = Ext.decode(res.responseText);
-                if(data && data.success) {
+                if (data && data.success) {
                     var items = data.data;
                     var totalItems = items.length;
 
@@ -1239,10 +1241,10 @@ pimcore.layout.toolbar = Class.create({
 
                     var progressWin = new Ext.Window({
                         title: t("generate_page_previews"),
-                        layout:'fit',
-                        width:500,
+                        layout: 'fit',
+                        width: 500,
                         bodyStyle: "padding: 10px;",
-                        closable:false,
+                        closable: false,
                         plain: true,
                         modal: false,
                         items: [progressBar]
@@ -1251,7 +1253,7 @@ pimcore.layout.toolbar = Class.create({
                     progressWin.show();
 
                     var generate = function () {
-                        if(items.length > 1) {
+                        if (items.length > 1) {
                             var next = items.shift();
 
                             var date = new Date();
@@ -1261,8 +1263,8 @@ pimcore.layout.toolbar = Class.create({
                                 generate();
                             });
 
-                            var status = (totalItems-items.length) / totalItems;
-                            progressBar.updateProgress(status, (Math.ceil(status*100) + "%"));
+                            var status = (totalItems - items.length) / totalItems;
+                            progressBar.updateProgress(status, (Math.ceil(status * 100) + "%"));
                         } else {
                             progressWin.close();
                         }
@@ -1288,7 +1290,7 @@ pimcore.layout.toolbar = Class.create({
 
         // this is for generated/configured reports like the SQL Report
         try {
-            if(reportClass) {
+            if (reportClass) {
                 pimcore.globalmanager.get("reports").openReportViaToolbar(reportClass, reportConfig);
             }
         } catch (e) {
@@ -1486,8 +1488,8 @@ pimcore.layout.toolbar = Class.create({
     },
 
     clearCache: function () {
-        Ext.Msg.confirm(t('warning'), t('system_performance_stability_warning'), function(btn){
-            if (btn == 'yes'){
+        Ext.Msg.confirm(t('warning'), t('system_performance_stability_warning'), function (btn) {
+            if (btn == 'yes') {
                 Ext.Ajax.request({
                     url: '/admin/settings/clear-cache'
                 });
@@ -1502,8 +1504,8 @@ pimcore.layout.toolbar = Class.create({
     },
 
     clearTemporaryFiles: function () {
-        Ext.Msg.confirm(t('warning'), t('system_performance_stability_warning'), function(btn){
-            if (btn == 'yes'){
+        Ext.Msg.confirm(t('warning'), t('system_performance_stability_warning'), function (btn) {
+            if (btn == 'yes') {
                 Ext.Ajax.request({
                     url: '/admin/settings/clear-temporary-files'
                 });
@@ -1563,10 +1565,11 @@ pimcore.layout.toolbar = Class.create({
 
     openImportConfig: function () {
         try {
-            var dialog  = new pimcore.object.helpers.import.configDialog({
-                classId: 2,                                 // TODO hardcoded to news class
+            var dialog = new pimcore.object.helpers.import.configDialog({
+                classId: 2,
                 className: "News",
-                mode: "direct"
+                mode: "direct",
+                importConfigId: 19
             });
         }
         catch (e) {
@@ -1594,7 +1597,7 @@ pimcore.layout.toolbar = Class.create({
         pimcore.helpers.openGenericIframeWindow("adminer", "/admin/external_adminer/adminer", "pimcore_icon_mysql", "Database Admin");
     },
 
-    showElementHistory: function() {
+    showElementHistory: function () {
         try {
             pimcore.globalmanager.get("element_history").activate();
         }
@@ -1621,7 +1624,7 @@ pimcore.layout.toolbar = Class.create({
         }
     },
 
-    showTagConfiguration: function() {
+    showTagConfiguration: function () {
         try {
             pimcore.globalmanager.get("element_tag_configuration").activate();
         }
@@ -1631,22 +1634,22 @@ pimcore.layout.toolbar = Class.create({
     },
 
 
-    bulkImport: function() {
+    bulkImport: function () {
 
-        Ext.Msg.confirm(t('warning'), t('warning_bulk_import'), function(btn){
-            if (btn == 'yes'){
+        Ext.Msg.confirm(t('warning'), t('warning_bulk_import'), function (btn) {
+            if (btn == 'yes') {
                 this.doBulkImport();
             }
         }.bind(this));
     },
 
 
-    doBulkImport: function() {
+    doBulkImport: function () {
         var importer = new pimcore.object.bulkimport;
         importer.upload();
     },
 
-    bulkExport: function() {
+    bulkExport: function () {
         var exporter = new pimcore.object.bulkexport();
         exporter.export();
     }

@@ -1709,5 +1709,10 @@
   "importconfig_removed": "Import config has been removed",
   "importconfig_not_removed": "Import config could not be removed",
   "import_export_configuration": "Import Export configuration",
-  "col_label": "Label"
+  "col_label": "Label",
+  "performing_import": "Performing Import...",
+  "row": "Row",
+  "import_report": "Import Report",
+  "import_errors": "Some errors occurred. Check the import report!",
+  "import_is_done": "Import is done"
 }
