@@ -1569,7 +1569,8 @@ pimcore.layout.toolbar = Class.create({
                 classId: 2,
                 className: "News",
                 mode: "direct",
-                importConfigId: 19
+                importConfigId: 19,
+                parentId: 63
             });
         }
         catch (e) {
