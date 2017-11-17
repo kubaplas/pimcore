@@ -86,7 +86,7 @@ class AssignTargetGroup implements ActionHandlerInterface
             return true;
         }
 
-        return $this->conditionMatcher->match($visitorInfo, $conditions);
+        return $this->conditionMatcher->matchConfigs($visitorInfo, $conditions);
     }
 
     private function storeAssignments(VisitorInfo $visitorInfo, TargetGroup $targetGroup): int
