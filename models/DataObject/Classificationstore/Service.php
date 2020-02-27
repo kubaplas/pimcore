@@ -17,10 +17,16 @@
 
 namespace Pimcore\Model\DataObject\Classificationstore;
 
+use Pimcore\Cache;
 use Pimcore\Model\DataObject;
 
 class Service
 {
+    /**
+     * @var array Used for storing definitions
+     */
+    protected static $definitionsCache = [];
+
     /**
      * @param KeyConfig $keyConfig
      *
@@ -28,11 +34,23 @@ class Service
      */
     public static function getFieldDefinitionFromKeyConfig($keyConfig)
     {
+        if ($keyConfig instanceof KeyConfig) {
+            $cacheId = $keyConfig->getId();
+        }
+
+        if ($keyConfig instanceof KeyGroupRelation) {
+            $cacheId = $keyConfig->getGroupId() . "_" . $keyConfig->getKeyId();
+        }
+
+        if (array_key_exists($keyConfigId, self::$definitionsCache)) {
+            return self::$definitionsCache[$cacheId];
+        }
+
         $definition = $keyConfig->getDefinition();
         $definition = json_decode($definition, true);
         $type = $keyConfig->getType();
         $fd = self::getFieldDefinitionFromJson($definition, $type);
-
+        self::$definitionsCache[$cacheId] = $fd;
         return $fd;
     }
 
